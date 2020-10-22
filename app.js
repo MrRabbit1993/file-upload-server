@@ -1,12 +1,11 @@
 const Koa = require('koa');
 
-const parser = require("koa-bodyparser");//解决post请求的参数
-
+const multipart = require('koa-multipart');
 const InitManager = require("./core/init");
 
 
 const app = new Koa();
-app.use(parser())
+app.use(multipart())
 
 InitManager.initCore(app);
 

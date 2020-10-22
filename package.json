@@ -4,6 +4,7 @@
   "description": "Node.js + Koa2",
   "main": "test.js",
   "scripts": {
+    "serve":"nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {},
@@ -12,7 +13,7 @@
   "bugs": {},
   "dependencies": {
     "koa": "^2.7.0",
-    "koa-bodyparser": "^4.2.1",
+    "koa-multipart": "0.0.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "lodash": "^4.17.11",

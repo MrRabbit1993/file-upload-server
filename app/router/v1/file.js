@@ -1,53 +1,38 @@
 const Router = require("koa-router");
+const path = require('path');
+const fs = require("fs");
+console.log(fs)
 const router = new Router();
+const { upload_dir } = require("./../../../config/config")
 router.get("/file/v1/demo", (ctx, next) => {
   const headers = ctx.request.header;//获取header
   ctx.body = { key: "v1/demo" }
 })
-router.post("/file/v1/upload", (ctx, next) => {
+router.post("/file/v1/upload", async (ctx, next) => {
   const body = ctx.request.body;//获取body
   const headers = ctx.request.header;//获取header
-  console.log(body);
-  console.log(headers);
-  const res = {
-    success: true,
-    errorCode: 0,
-    msg: "成功",
-    data: [
-      {
-        "value": "1",
-        "label": "黄金糕"
-      },
-      {
-        "value": "2",
-        "label": "双皮奶"
-      },
-      {
-        "value": "3",
-        "label": "蚵仔煎"
-      },
-      {
-        "value": "4",
-        "label": "龙须面"
-      },
-      {
-        "value": "5",
-        "label": "北京烤鸭"
-      },
-      {
-        "value": "6",
-        "label": "北京烤鸭2"
-      },
-      {
-        "value": "7",
-        "label": "北京烤鸭3"
-      },
-      {
-        "value": "8",
-        "label": "北京烤鸭4"
+  const { fields, files } = body
+  console.log(fields)
+  console.log(files)
+  const [chunk] = files;
+  const { hash } = fields;
+  const { filename } = fields;
+  const chunkDir = path.resolve(upload_dir, filename);
+  if (!fs.existsSync(chunkDir)) {
+    await fs.mkdir(chunkDir, { recursive: true }, (err) => {
+      if (err) throw err;
+      console.log('创建目录成功');
+    });
+    await fs.rename(chunk.path, `${chunkDir}/${hash}`, (err) => {
+      if (err) throw err;
+      const res = {
+        success: true,
+        code: 200,
+        msg: "上传成功",
+        data: []
       }
-    ]
+      ctx.body = res
+    });
   }
-  ctx.body = res
 })
 module.exports = router;
